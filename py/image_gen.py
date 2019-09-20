@@ -1,7 +1,8 @@
 #! /usr/bin/env python
 
 import sys
-from PIL import Image, ImageDraw, ImageFont
+# from PIL import Image, ImageDraw, ImageFont
+import json
 
 def old_main():
     args = sys.argv
@@ -42,6 +43,14 @@ def gen_image(filename, wh, color, text):
 
     img.save('images/' + filename+'.png')
 
+def gen_json(filename, maskable, wh):
+    icon = {}
+    icon['src'] = 'images/{}.png'.format(filename)
+    icon['sizes'] = '{}x{}'.format(wh, wh)
+    icon['purpose'] = 'maskable' if maskable else 'any'
+    icon['type'] = 'image/png'
+    return icon
+
 
 def main():
     dp2px = {
@@ -65,21 +74,16 @@ def main():
 
     img_data_arr = []
     for dpi, wh in app.items():
-        data = []
-        data.append(dpi)
-        data.append(wh)
-        data.append('red')
-        data.append(dpi[:-3])
 
-        img_data_arr.append(tuple(data))
+        data = (dpi, False, wh)
+        img_data_arr.append(gen_json(*data))
 
     for dpi, wh in maskable.items():
-        data = ('maskable-' + dpi, wh, 'blue', dpi[:-3])
-        img_data_arr.append(data)
+        data = ('maskable-' + dpi, True, wh)
+        img_data_arr.append(gen_json(*data))
 
-    for d in img_data_arr:
+    print json.dumps(img_data_arr, indent=4)
 
-        gen_image(*d)
 
     
 
