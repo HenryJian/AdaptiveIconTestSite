@@ -21,22 +21,24 @@ def old_main():
     img.save(new_name)
 
 def gen_image(filename, wh, color, text):
-    img = Image.new('RGB', (wh, wh), color = color)
-    
+    img = Image.new('RGB', (wh, wh), color = color)    
     d = ImageDraw.Draw(img)
-    middle = wh // 2
     
-    f1 = ImageFont.truetype('Roboto-Regular.ttf', size=1)
+    f1 = ImageFont.truetype('Roboto-Regular.ttf', size=100)
 
-    lx, ly = f1.getsize(text)
-    mlxly = max(lx, ly)
+    tx, ty = f1.getsize(text)
+    mtxy = max(tx, ty)
 
-    ratio = int(wh//mlxly * 1.5)
-    f2 = ImageFont.truetype('Roboto-Regular.ttf', size=ratio)
+    size_to_use = int(100 * wh * 1.0 / mtxy)
+    f2 = ImageFont.truetype('Roboto-Regular.ttf', size=size_to_use)
+
+    ax, ay = f2.getsize(text)
+    x_empty, y_empty = wh-ax, wh-ay
+
+    l, r = x_empty//2, y_empty//2
 
 
-
-    d.text((int(middle * 0.2), int(middle*0.9)), text, fill='black', align='center', font=f2)
+    d.text((l, r), text, fill='black', font=f2)
 
     img.save('images/' + filename+'.png')
 
@@ -67,7 +69,7 @@ def main():
         data.append(dpi)
         data.append(wh)
         data.append('red')
-        data.append(dpi)
+        data.append(dpi[:-3])
 
         img_data_arr.append(tuple(data))
 
