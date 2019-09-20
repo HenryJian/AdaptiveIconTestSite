@@ -29,7 +29,7 @@ def gen_image(filename, wh, color, text):
     tx, ty = f1.getsize(text)
     mtxy = max(tx, ty)
 
-    size_to_use = int(100 * wh * 1.0 / mtxy)
+    size_to_use = int(70 * wh * 1.0 / mtxy)
     f2 = ImageFont.truetype('Roboto-Regular.ttf', size=size_to_use)
 
     ax, ay = f2.getsize(text)
