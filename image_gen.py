@@ -24,16 +24,21 @@ def gen_image(filename, wh, color, text):
     img = Image.new('RGB', (wh, wh), color = color)
     
     d = ImageDraw.Draw(img)
-    middle = wh // 2 - 10
+    middle = wh // 2
     
-    # font = ImageFont.load_default()
-    # f2 = ImageFont.truetype(font, size=10)
+    f1 = ImageFont.truetype('Roboto-Regular.ttf', size=1)
+
+    lx, ly = f1.getsize(text)
+    mlxly = max(lx, ly)
+
+    ratio = int(wh//mlxly * 1.5)
+    f2 = ImageFont.truetype('Roboto-Regular.ttf', size=ratio)
 
 
 
-    d.text((middle,middle), text, fill='black', aligh='center')
+    d.text((int(middle * 0.2), int(middle*0.9)), text, fill='black', align='center', font=f2)
 
-    img.save(filename+'.png')
+    img.save('images/' + filename+'.png')
 
 
 def main():
@@ -43,7 +48,7 @@ def main():
         'xhdpi': 2,
         'xxhdpi': 3,
         'xxxhdpi': 4,
-        'spalsh-xxhdpi': 5,
+        'splash-xxhdpi': 5,
         'splash-xxxhdpi': 6
     }
 
@@ -67,7 +72,7 @@ def main():
         img_data_arr.append(tuple(data))
 
     for dpi, wh in maskable.items():
-        data = ('maskable-' + dpi, wh, 'blue', dpi)
+        data = ('maskable-' + dpi, wh, 'blue', dpi[:-3])
         img_data_arr.append(data)
 
     for d in img_data_arr:
